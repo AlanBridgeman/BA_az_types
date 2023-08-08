@@ -2,7 +2,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/ba_az_types.svg)](https://pypi.org/project/ba_az_types)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ba_az_types.svg)](https://pypi.org/project/ba_az_types)
 
-Bridgeman Accessible (BA)'s internal representation of Azure (az) resource types
+Bridgeman Accessible (BA)'s internal representation of Azure (az) resource types.
 
 -----
 
