@@ -69,6 +69,10 @@ class AzureResources(IAzureResources):
         # them in a dictionary (by category name)
         self.__categorized_resources = self.__get_categorized_resources(definition_json)
 
+    # =================
+    # Internal Methods
+    # =================
+
     def __get_categorized_resources(self, definition_json: dict[str, Any]) -> dict[str, list[ContainerRegistry | Database | StorageAccount | KeyVault | RedisCache | WebApp]]:
         """Gets the categorized resources from the definition JSON
 
@@ -124,12 +128,25 @@ class AzureResources(IAzureResources):
         
         return categorized_resources
 
+    # ================
+    # Resource Groups
+    # ================
+
     @property
     def resource_groups(self) -> list[ResourceGroup]: # type: ignore
         """The resource groups in the Azure Resources"""
 
         return self.__resource_groups
     
+    def add_resource_group(self, resource_group: ResourceGroup):
+        """Add a resource group to the Azure Resources
+
+        Args:
+            resource_group (ResourceGroup): The resource group to add
+        """
+
+        self.__resource_groups.append(resource_group)
+
     def has_resource_group(self, name: str) -> bool:
         """Check if the Azure Resources has a resource group with the specified name
         
@@ -164,12 +181,25 @@ class AzureResources(IAzureResources):
         
         return None
     
+    # =========
+    # Web Apps
+    # =========
+
     @property
     def web_apps(self) -> list[WebApp]: # type: ignore
         """The web apps in the Azure Resources"""
 
         return self.__web_apps
     
+    def add_web_apps(self, web_app: WebApp): # type: ignore
+        """Add a web app to the Azure Resources
+
+        Args:
+            web_app (WebApp): The web app to add
+        """
+
+        self.__web_apps.append(web_app)
+
     def has_web_app(self, name: str) -> bool:
         """Check if the Azure Resources has a web app with the specified name
         
@@ -203,12 +233,25 @@ class AzureResources(IAzureResources):
         
         return None
 
+    # =====================
+    # Container Registries
+    # =====================
+
     @property
     def container_registries(self) -> list[ContainerRegistry]: # type: ignore
         """The container registries in the Azure Resources"""
 
         return self.__container_registries
     
+    def add_container_registry(self, container_registry: ContainerRegistry): # type: ignore
+        """Add a container registry to the Azure Resources
+
+        Args:
+            container_registry (ContainerRegistry): The container registry to add
+        """
+
+        self.__container_registries.append(container_registry)
+
     def has_container_registry(self, name: str) -> bool:
         """Check if the Azure Resources has a container registry with the specified name
         
@@ -242,12 +285,25 @@ class AzureResources(IAzureResources):
         
         return None
     
+    # ==================
+    # App Registrations
+    # ==================
+
     @property
     def app_registrations(self) -> list[AppRegistration]: # type: ignore
         """The app registrations in the Azure Resources"""
 
         return self.__app_registrations
     
+    def add_app_registration(self, app_registration: AppRegistration):
+        """Add an app registration to the Azure Resources
+
+        Args:
+            app_registration (AppRegistration): The app registration to add
+        """
+
+        self.__app_registrations.append(app_registration)
+
     def has_app_registration(self, name: str) -> bool:
         """Check if the Azure Resources has an app registration with the specified name
         
@@ -281,12 +337,25 @@ class AzureResources(IAzureResources):
         
         return None
     
+    # ==========
+    # Databases
+    # ==========
+
     @property
     def databases(self) -> list[Database]: # type: ignore
         """The databases in the Azure Resources"""
 
         return self.__databases
     
+    def add_database(self, database: Database): # type: ignore
+        """Add a database to the Azure Resources
+
+        Args:
+            database (Database): The database to add
+        """
+
+        self.__databases.append(database)
+
     def has_database(self, name: str) -> bool:
         """Check if the Azure Resources has a database with the specified name
         
@@ -320,12 +389,25 @@ class AzureResources(IAzureResources):
         
         return None
 
+    # =======
+    # Caches
+    # =======
+
     @property
     def caches(self) -> list[RedisCache]: # type: ignore
         """The caches in the Azure Resources"""
 
         return self.__redis_caches
     
+    def add_cache(self, cache: RedisCache): # type: ignore
+        """Add a cache to the Azure Resources
+
+        Args:
+            cache (RedisCache): The cache to add
+        """
+
+        self.__redis_caches.append(cache) 
+
     def has_cache(self, name: str) -> bool:
         """Check if the Azure Resources has a cache with the specified name
         
@@ -359,12 +441,25 @@ class AzureResources(IAzureResources):
         
         return None
     
+    # ===============================
+    # Uncategorized Storage Accounts
+    # ===============================
+
     @property
     def uncategorized_storage(self) -> list[StorageAccount]: # type: ignore
         """The uncategorized storage accounts in the Azure Resources"""
 
         return self.__storage_accounts
     
+    def add_uncategorized_storage(self, storage: StorageAccount): # type: ignore
+        """Add an uncategorized storage account to the Azure Resources
+
+        Args:
+            storage (StorageAccount): The uncategorized storage account to add
+        """
+
+        self.__storage_accounts.append(storage)
+
     def has_uncategorized_storage(self, name: str) -> bool:
         """Check if the Azure Resources has an uncategorized storage account with the specified name
         
@@ -398,12 +493,25 @@ class AzureResources(IAzureResources):
         
         return None
     
+    # =========================
+    # Uncategorized Key Vaults
+    # =========================
+
     @property
     def uncategorized_vaults(self) -> list[KeyVault]: # type: ignore
         """The uncategorized key vaults in the Azure Resources"""
 
         return self.__key_vaults
     
+    def add_uncategorized_vaults(self, vault: KeyVault): # type: ignore
+        """Add the uncategorized key vault to the Azure Resources
+
+        Args:
+            vault (KeyVault): The uncategorized key vault to add to the Azure Resources
+        """
+
+        self.__key_vaults.append(vault)
+
     def has_uncategorized_vault(self, name: str) -> bool:
         """Check if the Azure Resources has an uncategorized key vault with the specified name
         
@@ -437,12 +545,30 @@ class AzureResources(IAzureResources):
         
         return None
 
+    # =====================================================
+    # Categorized Resources (BA Infrastructure Categories)
+    # =====================================================
+
     @property
     def categorized_resources(self) -> dict[str, list[ContainerRegistry | Database | StorageAccount | KeyVault | RedisCache | WebApp]]: # type: ignore
         """The categorized resources in the Azure Resources"""
         
         return self.__categorized_resources
     
+    def add_categorized_resource(self, category: str, *resource: ContainerRegistry | Database | StorageAccount | KeyVault | RedisCache | WebApp): # type: ignore
+        """Add a categorized resource to the Azure Resources
+
+        Args:
+            category (str): The category of the resource to add
+            resource (ContainerRegistry | Database | StorageAccount | KeyVault | RedisCache | WebApp): The resource to add
+        """
+
+        if category not in self.categorized_resources:
+            self.categorized_resources[category] = []
+        
+        for res in resource:
+            self.categorized_resources[category].append(res)
+
     def get_resource_categories(self) -> list[str]:
         """Get the categories of the resources in the Azure Resources
 
@@ -487,6 +613,10 @@ class AzureResources(IAzureResources):
         
         return None
     
+    # ==============
+    # Other methods
+    # ==============
+
     def to_json(self) -> dict[str, Any]:
         output = {
             self.RESOURCE_GROUPS_KEY: [resource_group.to_json() for resource_group in self.resource_groups],
