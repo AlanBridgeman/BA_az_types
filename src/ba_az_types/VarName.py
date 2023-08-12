@@ -7,17 +7,31 @@ from .interfaces.IVarNameStorageTable import IVarNameStorageTable
 from .interfaces.IVarNameStorageContainer import IVarNameStorageContainer
 
 class VarName(IVarName):
-    def __init__(self, value: str | dict[Any, Any]):
+    CATEGORY_PREFIX_KEY = 'prefixCategoryName'
+    """The key/property name for whether or not to prefix the category name (if the VarName is a dictionary instead of a string)"""
+    REPLACE_KEY = 'replace'
+    """The key/property name for the replace property (if the VarName is a dictionary instead of a string)"""
+    SUFFIX_KEY = 'suffix'
+    """The key/property name for the suffix property (if the VarName is a dictionary instead of a string)"""
+
+    def __init__(self, value: str | dict[str, Any]):
+        # If the value is a dictionary and it includes the category prefix property/key, we want to convert from a string to a proper boolean
+        if type(value) == dict and self.CATEGORY_PREFIX_KEY in value:
+            if value[self.CATEGORY_PREFIX_KEY].lower() == 'true':
+                value[self.CATEGORY_PREFIX_KEY] = True
+            elif value[self.CATEGORY_PREFIX_KEY].lower() == 'false':
+                value[self.CATEGORY_PREFIX_KEY] = False
+        
         self.value = value
     
-    def handle_category_prefix(self, var_name_props: dict[Any, Any], category_name: str) -> str:
-        if 'prefixCategoryName' in var_name_props:
+    def handle_category_prefix(self, var_name_props: dict[str, Any], category_name: str) -> str:
+        if self.CATEGORY_PREFIX_KEY in var_name_props:
             # Print debugging output if DEBUG_MODE is set
             if os.getenv('DEBUG_MODE') != None:
                 print('The prefix property of the varName property was set')
 
             # Note, we only want to prefix if it's set to true
-            if var_name_props['prefixCategoryName'] == True:
+            if var_name_props[self.CATEGORY_PREFIX_KEY] == True:
                 # Print debugging output if DEBUG_MODE is set
                 if os.getenv('DEBUG_MODE') != None:
                     print('The prefix property of the varName property was set to true')
@@ -33,7 +47,7 @@ class VarName(IVarName):
             # Because the prefixCategoryName property isn't set default to prefixing the category name
             return category_name
     
-    def handle_replacements(self, var_name_props: dict[Any, Any], var_name_so_far: str) -> str:
+    def handle_replacements(self, var_name_props: dict[str, Any], var_name_so_far: str) -> str:
         """Perform the replacements specified in the variable name's property to the encapsulating object's name
 
         Args:
@@ -44,7 +58,7 @@ class VarName(IVarName):
             str: The variable name with replacements filled in, if set. Otherwise the variable name as is
         """
 
-        if 'replace' in var_name_props and len(var_name_props['replace']) > 0:
+        if self.REPLACE_KEY in var_name_props and len(var_name_props[self.REPLACE_KEY]) > 0:
             # Print debugging output if DEBUG_MODE is set
             if os.getenv('DEBUG_MODE') != None:
                 print('The replace property is set on the varName property object')
@@ -53,13 +67,13 @@ class VarName(IVarName):
             name_with_replacements = var_name_so_far
 
             # Loop over the desired replacements and "calculate" the output
-            for search_str in var_name_props['replace']:
+            for search_str in var_name_props[self.REPLACE_KEY]:
                 # Print debugging output if DEBUG_MODE is set
                 if os.getenv('DEBUG_MODE') != None:
-                    print(f'Attempting to replace {search_str} with {var_name_props["replace"][search_str]} in {name_with_replacements}')
+                    print(f'Attempting to replace {search_str} with {var_name_props[self.REPLACE_KEY][search_str]} in {name_with_replacements}')
 
                 # Actually do the replacements
-                name_with_replacements = name_with_replacements.replace(search_str, var_name_props['replace'][search_str])
+                name_with_replacements = name_with_replacements.replace(search_str, var_name_props[self.REPLACE_KEY][search_str])
 
                 # Print debugging output if DEBUG_MODE is set
                 if os.getenv('DEBUG_MODE') != None:
@@ -71,7 +85,7 @@ class VarName(IVarName):
             # Because no replacements were specified simply use the name of the encapsulating object
             return var_name_so_far
 
-    def handle_suffix(self, var_name_props: dict[Any, Any], var_name_so_far: str) -> str:
+    def handle_suffix(self, var_name_props: dict[str, Any], var_name_so_far: str) -> str:
         """Provide the suffix if set
 
         Args:
@@ -83,18 +97,18 @@ class VarName(IVarName):
         """
 
         # Append the suffix if set
-        if 'suffix' in var_name_props:
-            suffix = var_name_props['suffix']
+        if self.SUFFIX_KEY in var_name_props:
+            suffix = var_name_props[self.SUFFIX_KEY]
             
             # Print debugging output if DEBUG_MODE is set
             if os.getenv('DEBUG_MODE') != None:
                 print(f'Adding suffix: ${suffix}')
                     
-            return var_name_props['suffix']
+            return var_name_props[self.SUFFIX_KEY]
         else:
             return ''
     
-    def handle_dictionary_value(self, var_name_props: dict[Any, Any], encapsulating_obj: IVarNameStorageTable | IVarNameStorageContainer) -> str:
+    def handle_dictionary_value(self, var_name_props: dict[str, Any], encapsulating_obj: IVarNameStorageTable | IVarNameStorageContainer) -> str:
         env_var_name = ''
 
         # Print debugging output if DEBUG_MODE is set

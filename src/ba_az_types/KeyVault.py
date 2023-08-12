@@ -15,7 +15,7 @@ class KeyVault(IKeyVault):
         self.__name = definition_json[self.NAME_KEY]
         
         self.__access: list[AppRegistration] = []
-        for app_with_access in definition_json["access"]:
+        for app_with_access in definition_json[self.ACCESS_KEY]:
             app_registration: AppRegistration | None = azure_resources.get_app_registration(app_with_access) # type: ignore
             if app_registration is not None:
                 self.__access.append(app_registration)
@@ -119,7 +119,7 @@ class KeyVault(IKeyVault):
     def to_json(self) -> dict[str, Any]:
         return {
             self.NAME_KEY: self.name,
-            "access": [app.name for app in self.access],
+            self.ACCESS_KEY: [app.name for app in self.access],
             self.RESOURCE_GROUP_KEY: self.resource_group.name,
             self.WEB_APPS_KEY: [web_app.name for web_app in self.web_apps]
         }

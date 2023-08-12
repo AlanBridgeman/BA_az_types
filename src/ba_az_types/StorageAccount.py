@@ -15,6 +15,7 @@ class StorageAccount(IStorageAccount):
         self.__name = definition_json[self.NAME_KEY]
         self.__category_name = category_name
         self.__key = ''
+        self.__connection_string = ''
         self.__web_apps = self.__get_web_apps(definition_json, azure_resources)
         self.__resource_group = self.__get_resource_group(definition_json, azure_resources)
         self.__containers = self.__get_containers(definition_json)
@@ -149,7 +150,7 @@ class StorageAccount(IStorageAccount):
     
     @property
     def connection_string(self) -> str:
-        """The onnection string for the storage account
+        """The connection string for the storage account
         
         Note, this comes from a seperate "storage accounts" file rather than the "resources" file
         """
@@ -216,12 +217,22 @@ class StorageAccount(IStorageAccount):
                 break
     
     def to_json(self) -> dict[str, Any]:
-        return {
+        return_obj = {
             self.NAME_KEY: self.name,
             self.RESOURCE_GROUP_KEY: self.resource_group.name,
-            self.WEB_APPS_KEY: [web_app.name for web_app in self.web_apps],
-            "key": self.key,
-            #"connectionString": self.connection_string,
-            self.CONTAINERS_KEY: [container.to_json() for container in self.containers],
-            self.TABLES_KEY: [table.to_json() for table in self.tables]
+            self.WEB_APPS_KEY: [web_app.name for web_app in self.web_apps]
         }
+
+        if self.key != '':
+            return_obj["key"] = self.key
+        
+        if self.connection_string != '':
+            return_obj["connectionString"] = self.connection_string
+        
+        if len(self.containers) > 0:
+            return_obj[self.CONTAINERS_KEY] = [container.to_json() for container in self.containers]
+        
+        if len(self.tables) > 0:
+            return_obj[self.TABLES_KEY] = [table.to_json() for table in self.tables]
+        
+        return return_obj

@@ -9,6 +9,9 @@ class IKeyVault(ICategorizableResource, IWebAppAssociatedResource):
 
     __metaclass__ = ABCMeta
     
+    ACCESS_KEY = "access"
+    """The key for the access property"""
+
     @property
     @abstractmethod
     def access(self) -> list[IAppRegistration]:

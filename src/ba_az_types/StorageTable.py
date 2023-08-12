@@ -52,8 +52,12 @@ class StorageTable(IStorageTable, IVarNameStorageTable):
         return self.__data
     
     def to_json(self) -> dict[str, Any]:
-        return {
+        return_obj = {
             self.NAME_KEY: self.name,
-            self.VAR_NAME_KEY: self.var_name_object.to_json(),
-            self.DATA_KEY: self.data
+            self.VAR_NAME_KEY: self.var_name_object.to_json()
         }
+
+        if len(self.data) > 0:
+            return_obj[self.DATA_KEY] = self.data
+        
+        return return_obj

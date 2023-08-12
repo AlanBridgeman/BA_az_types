@@ -49,9 +49,17 @@ class AppRegistration(IAppRegistration):
         self._service_principal_id = value
     
     def to_json(self) -> dict[str, Any]:
-        return {
-            self.NAME_KEY: self.name,
-            "app_id": self.app_id,
-            "app_secret": self.app_secret,
-            "service_principal_id": self.service_principal_id
+        return_obj = {
+            self.NAME_KEY: self.name
         }
+
+        if self.app_id is not None:
+            return_obj["appId"] = self.app_id
+        
+        if self.app_secret is not None:
+            return_obj["appSecret"] = self.app_secret
+        
+        if self.service_principal_id is not None:
+            return_obj["servicePrincipalId"] = self.service_principal_id
+        
+        return return_obj
