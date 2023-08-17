@@ -191,7 +191,7 @@ class AzureResources(IAzureResources):
 
         return self.__web_apps
     
-    def add_web_apps(self, web_app: WebApp): # type: ignore
+    def add_web_app(self, web_app: WebApp): # type: ignore
         """Add a web app to the Azure Resources
 
         Args:
