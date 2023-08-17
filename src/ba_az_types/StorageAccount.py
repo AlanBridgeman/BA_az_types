@@ -37,7 +37,15 @@ class StorageAccount(IStorageAccount):
 
         resource_group: ResourceGroup | None = azure_resources.get_resource_group(definition_json[self.RESOURCE_GROUP_KEY]) if self.RESOURCE_GROUP_KEY in definition_json else None # type: ignore
         if resource_group is None and len(self.__web_apps) > 0:
-            web_app_rgs: list[ResourceGroup] = [web_app.resource_group for web_app in self.__web_apps if web_app.resource_group]
+            # List of resource groups for the associated web apps
+            web_app_rgs: list[ResourceGroup] = []
+            
+            # Get the resource group for each web app
+            for web_app in self.__web_apps:
+                web_app_rgs.append(web_app.resource_group)
+            
+            # We should have EXACTLY one resource group for all the web apps
+            # Otherwise, we're confused and really can't infer the resource group
             if len(web_app_rgs) == 1:
                 resource_group = web_app_rgs[0]
         

@@ -16,11 +16,11 @@ class VarName(IVarName):
 
     def __init__(self, value: str | dict[str, Any]):
         # If the value is a dictionary and it includes the category prefix property/key, we want to convert from a string to a proper boolean
-        if type(value) == dict and self.CATEGORY_PREFIX_KEY in value:
-            if value[self.CATEGORY_PREFIX_KEY].lower() == 'true':
-                value[self.CATEGORY_PREFIX_KEY] = True
-            elif value[self.CATEGORY_PREFIX_KEY].lower() == 'false':
-                value[self.CATEGORY_PREFIX_KEY] = False
+        if type(value) == dict and self.CATEGORY_PREFIX_KEY in value and type(value[self.CATEGORY_PREFIX_KEY]) == str:
+                if value[self.CATEGORY_PREFIX_KEY].lower() == 'true':
+                    value[self.CATEGORY_PREFIX_KEY] = True
+                elif value[self.CATEGORY_PREFIX_KEY].lower() == 'false':
+                    value[self.CATEGORY_PREFIX_KEY] = False
         
         self.value = value
     
